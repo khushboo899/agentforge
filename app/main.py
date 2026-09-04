@@ -1,24 +1,37 @@
 from app.graph.workflow import graph
 
 
-question = """
-Analyze whether a startup should enter the Indian
-electric vehicle charging market.
-Identify the major challenges, opportunities,
-and important factors that should be researched.
-"""
+messages = []
+
+print("\n🤖 AgentForge AI")
+print("Type 'exit' to stop.\n")
 
 
-result = graph.invoke(
-    {
-        "question": question
-    }
-)
+while True:
 
+    question = input("You: ")
 
-print("\n")
-print("=" * 60)
-print("FINAL ANSWER")
-print("=" * 60)
+    if question.lower() == "exit":
+        print("\n👋 Goodbye!")
+        break
 
-print(result["answer"])
+    result = graph.invoke(
+        {
+            "question": question,
+            "messages": messages
+        }
+    )
+
+    answer = result.get(
+        "answer",
+        "No answer generated."
+    )
+
+    messages = result.get(
+        "messages",
+        messages
+    )
+
+    print("\n🤖 AgentForge:")
+    print(answer)
+    print("\n" + "=" * 60 + "\n")
