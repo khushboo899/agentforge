@@ -7,3 +7,7 @@ __pycache__/
 *.log
 data/
 .pytest_cache/
+# LangGraph checkpoints
+checkpoints.sqlite
+checkpoints.sqlite-shm
+checkpoints.sqlite-wal
