@@ -1,4 +1,4 @@
-from typing import TypedDict, List
+from typing import TypedDict, List, Dict
 
 
 class AgentState(TypedDict, total=False):
@@ -6,6 +6,9 @@ class AgentState(TypedDict, total=False):
     # User input
     question: str
     pdf_path: str
+
+    # Conversation memory
+    messages: List[Dict[str, str]]
 
     # Task analysis
     task_type: str
@@ -23,16 +26,20 @@ class AgentState(TypedDict, total=False):
     # Research
     research_results: List[str]
 
+    # RAG
+    retrieved_documents: List[Dict]
+    context: str
+
     # Final answer
     answer: str
 
     # Critic
-    critique: str
+    critique: Dict
     approved: bool
     score: float
     issues: List[str]
     missing_information: List[str]
     suggestions: List[str]
 
-    # Retry control
+    # Retry
     retry_count: int

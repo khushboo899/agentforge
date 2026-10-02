@@ -1,3 +1,6 @@
+import sqlite3
+from langgraph.checkpoint.sqlite import SqliteSaver
+
 from langgraph.graph import StateGraph, START, END
 
 from app.graph.state import AgentState
@@ -16,6 +19,7 @@ from app.graph.nodes import (
 )
 
 
+
 def route_after_planner(state: AgentState):
 
     return state["route"]
@@ -23,17 +27,35 @@ def route_after_planner(state: AgentState):
 
 def route_after_critic(state: AgentState):
 
-    score = state.get("score", 0)
+    score = state.get("score", 0.0)
+    approved = state.get("approved", False)
     retry_count = state.get("retry_count", 0)
 
-    # Good answer
-    if state.get("approved") and score >= 0.75:
+    print("\n🔀 Critic decision...")
+
+    print(f"   Score: {score}")
+    print(f"   Approved: {approved}")
+    print(f"   Retry count: {retry_count}")
+
+    # Answer meets quality threshold
+    if approved and score >= 0.75:
+
+        print("   ✅ Answer approved.")
+
         return "end"
 
-    # Prevent infinite loops
+    # Prevent infinite retries
     if retry_count >= 2:
-        print("\n⚠️ Maximum retries reached.")
+
+        print(
+            "   ⚠️ Maximum retries reached. "
+            "Returning best available answer."
+        )
+
         return "end"
+
+    # Answer needs improvement
+    print("   🔄 Answer needs improvement.")
 
     return "retry"
 
@@ -100,5 +122,13 @@ builder.add_conditional_edges(
 
 builder.add_edge("prepare_retry","planner")
 
+conn = sqlite3.connect(
+    "checkpoints.sqlite",
+    check_same_thread=False
+)
 
-graph = builder.compile()
+checkpointer = SqliteSaver(conn)
+
+graph = builder.compile(
+    checkpointer=checkpointer
+)

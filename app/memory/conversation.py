@@ -6,14 +6,16 @@ def add_user_message(
     question: str
 ):
 
-    messages.append(
+    updated_messages = messages.copy()
+
+    updated_messages.append(
         {
             "role": "user",
             "content": question
         }
     )
 
-    return messages
+    return updated_messages
 
 
 def add_assistant_message(
@@ -21,11 +23,13 @@ def add_assistant_message(
     answer: str
 ):
 
-    messages.append(
+    updated_messages = messages.copy()
+
+    updated_messages.append(
         {
             "role": "assistant",
             "content": answer
         }
     )
 
-    return messages
+    return updated_messages
