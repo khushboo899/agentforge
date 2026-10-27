@@ -1,0 +1,13 @@
+langgraph
+langgraph-checkpoint-sqlite
+langchain-groq
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-huggingface
+groq
+python-dotenv
+faiss-cpu
+pypdf
+sentence-transformers
+pydantic
